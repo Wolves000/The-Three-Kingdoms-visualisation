@@ -13,4 +13,4 @@
 纷争之地  
 ![Image text](https://github.com/Wolves000/The-Three-Kingdoms-visualisation/blob/master/images/KZ3`TK~J8TP9BX8A6]LGRW2.png)  
 战争模拟  
-![Image text](https://github.com/Wolves000/The-Three-Kingdoms-visualisation/blob/master/images/M_DYBZ5RFESZ}$MF24}HZ%5.png)  
+![Image text](https://github.com/Wolves000/The-Three-Kingdoms-visualisation/blob/master/images/M_DYBZ5RFESZ%7D%24MF24%7DHZ%255.png)  
