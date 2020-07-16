@@ -1,7 +1,7 @@
 # The-Three-Kingdoms-visualisation
 一个以三国战争为切入点的三国知识科普平台  
 运行环境：apache 2.4+MySQL 5.7  
-# 功能
+# 功能  
 首页  
 ![Image text](https://github.com/Wolves000/The-Three-Kingdoms-visualisation/blob/master/images/ODYLBDCZW}QMO5D%1%7QQA5.png)  
 三国知识图谱  
@@ -13,4 +13,4 @@
 纷争之地  
 ![Image text](https://github.com/Wolves000/The-Three-Kingdoms-visualisation/blob/master/images/KZ3`TK~J8TP9BX8A6]LGRW2.png)  
 战争模拟  
-![Image text](https://github.com/Wolves000/The-Three-Kingdoms-visualisation/blob/master/images/M_DYBZ5RFESZ}$MF24}HZ%5.png) 
+![Image text](https://github.com/Wolves000/The-Three-Kingdoms-visualisation/blob/master/images/M_DYBZ5RFESZ}$MF24}HZ%5.png)  
