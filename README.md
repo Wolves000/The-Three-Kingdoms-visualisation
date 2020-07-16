@@ -3,7 +3,7 @@
 运行环境：apache 2.4+MySQL 5.7  
 # 功能  
 首页  
-![Image text](https://github.com/Wolves000/The-Three-Kingdoms-visualisation/blob/master/images/ODYLBDCZW}QMO5D%1%7QQA5.png)  
+![Image text](https://github.com/Wolves000/The-Three-Kingdoms-visualisation/blob/master/images/ODYLBDCZW%7DQMO5D%251%257QQA5.png)  
 三国知识图谱  
 ![Image text](https://github.com/Wolves000/The-Three-Kingdoms-visualisation/blob/master/images/[63}$8KM6]6@9]JEIWRX~2I.png)  
 战争之路  
