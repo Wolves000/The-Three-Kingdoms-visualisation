@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="5f625509-8ece-4449-9787-d2f99507d825" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution>
+      <executable />
+    </execution>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+        <option value="HTML File" />
+        <option value="CSS File" />
+      </list>
+    </option>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP 7.3" />
+  <component name="ProjectId" id="1bJLhMCUBXcfzvp6atOmoEODG67" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
+    <property name="settings.editor.selected.configurable" value="web.server" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Apache24\htdocs\Phpstorm\数据库连接" />
+      <recent name="D:\Apache24\htdocs\Phpstorm\数据库连接\image" />
+      <recent name="D:\Apache24\htdocs\Phpstorm\数据库连接\css" />
+      <recent name="D:\Apache24\htdocs\Phpstorm\数据库连接\moni" />
+      <recent name="D:\Apache24\htdocs\Phpstorm\数据库连接\leaflet" />
+    </key>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5f625509-8ece-4449-9787-d2f99507d825" name="Default Changelist" comment="" />
+      <created>1588345367603</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1588345367603</updated>
+      <workItem from="1588345368968" duration="107000" />
+      <workItem from="1588345686339" duration="41000" />
+      <workItem from="1588421620983" duration="797000" />
+      <workItem from="1588569540621" duration="116000" />
+      <workItem from="1588570348560" duration="5851000" />
+      <workItem from="1588638922362" duration="2711000" />
+      <workItem from="1588726412436" duration="2429000" />
+      <workItem from="1588744470998" duration="11098000" />
+      <workItem from="1588762236837" duration="9942000" />
+      <workItem from="1588901258921" duration="1909000" />
+      <workItem from="1589070277090" duration="34869000" />
+      <workItem from="1589456409854" duration="5240000" />
+      <workItem from="1589501302705" duration="19274000" />
+      <workItem from="1589596421800" duration="3000" />
+      <workItem from="1589596441755" duration="3635000" />
+      <workItem from="1589631635598" duration="1480000" />
+      <workItem from="1589633952119" duration="2404000" />
+      <workItem from="1590059911161" duration="4942000" />
+      <workItem from="1590108428790" duration="11063000" />
+      <workItem from="1590212794184" duration="3764000" />
+      <workItem from="1590280782439" duration="12459000" />
+      <workItem from="1590305151041" duration="2394000" />
+      <workItem from="1590308331037" duration="4316000" />
+      <workItem from="1590323530800" duration="984000" />
+      <workItem from="1590330461918" duration="641000" />
+      <workItem from="1590405263823" duration="8614000" />
+      <workItem from="1590502167854" duration="3701000" />
+      <workItem from="1590538982983" duration="3853000" />
+      <workItem from="1590758347828" duration="3910000" />
+      <workItem from="1590930620256" duration="10000" />
+      <workItem from="1590932142433" duration="2472000" />
+      <workItem from="1591424987388" duration="1103000" />
+      <workItem from="1591447777860" duration="1834000" />
+      <workItem from="1591874057429" duration="3127000" />
+      <workItem from="1591962514875" duration="3727000" />
+      <workItem from="1591967330514" duration="789000" />
+      <workItem from="1591968411114" duration="1928000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="452" y="0" key="#PHP" timestamp="1588345387494">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="452" y="0" key="#PHP/0.0.1536.824@0.0.1536.824" timestamp="1588345387494" />
+    <state x="599" y="335" key="NewPhpFileDialog" timestamp="1588744946385">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="599" y="335" key="NewPhpFileDialog/0.0.1536.824@0.0.1536.824" timestamp="1588744946385" />
+    <state x="270" y="54" key="SettingsEditor" timestamp="1590930629121">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="270" y="54" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1590930629121" />
+    <state x="449" y="236" key="com.intellij.ide.util.TipDialog" timestamp="1591968416200">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="449" y="236" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1591968416200" />
+  </component>
+</project>

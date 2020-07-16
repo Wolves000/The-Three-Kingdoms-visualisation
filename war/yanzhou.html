@@ -1,0 +1,120 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <script src="js/echarts3.8.5.min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=A3CklGvnFOjkAzKzay2dySgfdig0GKz4"></script>
+    <script type="text/javascript" src="js/bmap3.8.5.min.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/DrawingManager_min.js"></script>
+    <script type="text/javascript" src="js/yanzhou.js"></script>
+    <link rel="stylesheet" href="css/DrawingManager_min.css" />
+    <link rel="stylesheet" href="css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="../font-awesome/css/font-awesome.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/local.css" />
+		<script type="text/javascript" src="../js/jquery-1.10.2.min.js"></script>
+		<script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
+    <style type="text/css">
+        body,
+        html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            font-family: "微软雅黑";
+        }
+        
+        #allmap {
+            height: 100%;
+        }
+        
+        .layui-nav .layui-nav-item a {
+            font-size: 16px;
+        }
+        
+        .layui-card-header {
+            font-size: 20px;
+            background-color: #2f4056;
+            color: whitesmoke;
+            letter-spacing: 2px;
+        }
+        
+        .layui-card-body {
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            display: inline-block;
+            margin-top: 5px;
+            color: #2f4056;
+        }
+        
+        .cart-content {
+            display: inline-block;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+          <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="index.html">烽火三国</a>
+          </div>
+          <div class="collapse navbar-collapse navbar-ex1-collapse">
+              <ul id="active" class="nav navbar-nav side-nav">
+                <li class="selected"><a href="index.html"><i class="fa fa-bullseye"></i> 主页</a></li>
+                  <li><a href="../knowledge/index.html"><i class="fa fa-list-ol"></i> 知识图谱</a></li>
+                <li><a href="../war/index.html"><i class="fa fa-tasks"></i> 战争之路</a></li>
+                <li><a href="../heroes/index.html"><i class="fa fa-globe"></i> 群英传</a></li>
+
+                <li><a href="../heatmap/index.html"><i class="fa fa-list-ol"></i> 纷争之地</a></li>
+                <li><a href="../simulate/index.html"><i class="fa fa-font"></i> 战争模拟</a></li>
+              </ul>
+          </div>
+      </nav>
+  </div>
+
+    <div id="allmap"></div>
+    <div id="allmap"></div>
+    <div style="position:fixed;left:85%;top:18%;width: 300px;z-index: 9999;">
+        <div class="layui-card">
+            <div id="person-card" class="layui-card-header">兖州之战</div>
+            <div class="layui-card-body">
+                <span class="card-title">时&nbsp;&nbsp;&nbsp;间：</span><span id="infor-time" class="cart-content">194年-195年</span>
+                <br>
+                <span class="card-title">兵&nbsp;&nbsp;&nbsp;力：</span><span id="infor-old-name" class="cart-content">吕布、张邈联军数万；曹军数万</span>
+                <br>
+                <span class="card-title">伤&nbsp;&nbsp;&nbsp;亡：</span><span id="infor-now-name" class="cart-content">未详细记载</span>
+                <br>
+                <span class="card-title">结&nbsp;&nbsp;&nbsp;果：</span><span id="infor-event" class="cart-content">曹操军获胜</span>
+            </div>
+        </div>
+    </div>
+    <div style="position:fixed;left:85%;top:45%;width: 300px;z-index: 9999;">
+        <div class="layui-card">
+            <div id="person-card" class="layui-card-header">过程</div>
+            <div class="layui-card-body">
+                <span class="card-title">时&nbsp;&nbsp;&nbsp;间：</span><span id="time" class="cart-content">194-09-30</span>
+                <br>
+                <span class="card-title">事&nbsp;&nbsp;&nbsp;件：</span><span id="event" class="cart-content">兴平元年（194年），张邈和陈宫等却乘曹操外征徐州，秘密迎接吕布来担任兖州牧。九月，曹操回到鄄城</span>
+            </div>
+        </div>
+    </div>
+    <script>
+        //绘制
+        drawMap();
+    </script>
+
+</body>
+
+</html>

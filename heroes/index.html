@@ -1,0 +1,538 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="assets/js/echarts.min.js"></script>
+<script type="text/javascript" src="assets/js/china.js"></script>
+<title>群英轨迹图</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no，maximum-scale=1.0" />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<script type="text/javascript" src="assets/js/jquery.min.2.0.js"></script>
+<link rel="stylesheet" href="assets/css/main.css" />
+<link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../font-awesome/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="../css/local.css" />
+<script type="text/javascript" src="../js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
+</head>
+<style>
+            .butn{
+            z-index: 150;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border-radius: .25rem;
+            width: 8rem;
+            border-width: 0;
+            border-radius: 0.4rem;
+            box-shadow: 0 2px 6px 0 rgba(114, 124, 245, .5);
+            position: fixed;
+            Top: 10rem;
+            right: 1rem;
+            -ms-flex: 1 1 auto;
+            flex: 1 1 auto;
+            padding: 0.75rem 1.25rem;
+        }
+</style>
+<body class="is-preload">
+    <div id="wrapper">
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+          <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="index.html">烽火三国</a>
+          </div>
+          <div class="collapse navbar-collapse navbar-ex1-collapse">
+              <ul id="active" class="nav navbar-nav side-nav">
+                <li class="selected"><a href="../index.html"><i class="fa fa-bullseye"></i> 主页</a></li>
+                  <li><a href="../knowledge/index.html"><i class="fa fa-list-ol"></i> 知识图谱</a></li>
+                  <li><a href="../war/index.html"><i class="fa fa-tasks"></i> 战争之路</a></li>
+                    <li><a href="../heroes/index.html"><i class="fa fa-globe"></i> 群英传</a></li>
+
+                    <li><a href="../heatmap/index.html"><i class="fa fa-list-ol"></i> 纷争之地</a></li>
+                    <li><a href="../simulate/index.html"><i class="fa fa-font"></i> 战争模拟</a></li>
+              </ul>
+          </div>
+      </nav>
+  </div>
+    <div id = "main" style = "position:absolute;width:100%;height:100%;margin: -100px 0 0;"></div>
+    <script>
+            var myChart = echarts.init(document.getElementById('main'));
+            var book;
+            $.ajax({
+            type: 'POST',
+            url: 'index.php',
+            async:false,
+            success: function (data) {
+                console.log(data);
+                var a = data.split(' ');
+                book= JSON.parse(a);
+                console.log(a[0]);
+                return book;
+            }
+        });
+        var book1;
+        $.ajax({
+            type: 'POST',
+            url: '01.php',
+            async:false,
+            success: function (data) {
+                console.log(data);
+                var a = data.split(' ');
+                book1= JSON.parse(a);
+                console.log(a[0]);
+                return book1;
+            }
+        });
+        var book2;
+        $.ajax({
+            type: 'POST',
+            url: '02.php',
+            async:false,
+            success: function (data) {
+                console.log(data);
+                var a = data.split(' ');
+                book2= JSON.parse(a);
+                console.log(a[0]);
+                return book2;
+            }
+        });
+        var book3;
+        $.ajax({
+            type: 'POST',
+            url: '03.php',
+            async:false,
+            success: function (data) {
+                console.log(data);
+                var a = data.split(' ');
+                book3= JSON.parse(a);
+                console.log(a[0]);
+                return book3;
+            }
+        });
+       
+        var geoCoordMap = {
+    '沛国谯县': [book[0][0],book[0][1]],
+    '洛阳': [book[1][0],book[1][1]],
+    '颍川':[book[2][0],book[2][1]],
+    '济南':[book[3][0],book[3][1]],
+    '陈留':[book[4][0],book[4][1]],
+    '荥阳汴水':[book[5][0],book[5][1]],
+    '东郡':[book[6][0],book[6][1]],
+    '兖州':[book[7][0],book[7][1]],
+    '徐州':[book[8][0],book[8][1]],
+    '东海':[book[9][0],book[9][1]],
+    '许县':[book[10][0],book[10][1]],
+    '淯水':[112.42914,33.48979],
+    '官渡':[113.97624,34.71903],
+    '白马':[book[13][0],book[13][1]],
+    '乌巢':[book[14][0],book[14][1]],
+    '邺城':[book[15][0],book[15][1]],
+    '冀州':[book[16][0],book[16][1]],
+    '并州':[book[17][0],book[17][1]],
+    '乌桓':[book[18][0],book[18][1]],
+    '荆州':[112.19016,30.35269],
+    '当阳长坂坡':[book[20][0],book[20][1]],
+    '赤壁':[book[21][0],book[21][1]],
+    '关中':[book[22][0],book[22][1]],
+    '汉中':[book[23][0],book[23][1]],
+    '濡须口':[book[24][0],book[24][1]],
+    '长安':[book[25][0],book[25][1]],
+    '邺城西郊高陵':[book[26][0],book[26][1]],
+    '许昌':[113.85847,34.0414316],
+    '河东郡解县':[book[27][0],book[27][1]],
+    '平原':[book[28][0],book[28][1]],
+     '许昌':[113.85847,34.0414316],
+    '夏口':[book[29][0],book[29][1]],
+    '樊城':[book[30][0],book[30][1]],
+    '麦城':[book[31][0],book[31][1]],
+    '临沮':[111.43471,30.5307],
+  
+    '涿郡涿县':[book[33][0],book[33][1]],
+    '安喜县':[book[34][0],book[34][1]],
+    '平原县':[book[35][0],book[35][1]],
+    '小沛':[book[37][0],book[37][1]],
+    '豫州':[book[39][0],book[39][1]],
+    '汝南':[book[40][0],book[40][1]],
+    '新野':[book[41][0],book[41][1]],
+    '隆中':[book[42][0],book[42][1]],
+
+    '成都':[104.081533,30.6558218],
+    '汉中':[107.029430,33.0737999],
+    '定军山':[106.672638,33.1196693],
+    '夷陵':[111.332529,30.7748333],
+    '白帝城':[109.40093,31.018551],
+
+};
+var H4Data = [
+    [{name:'沛国谯县'}, {name:'洛阳',value:4}],
+    [{name:'洛阳'}, {name:'沛国谯县',value:4}],
+    [{name:'沛国谯县'}, {name:'洛阳',value:4}],
+    [{name:'洛阳'}, {name:'颍川',value:4}],
+    [{name:'颍川'}, {name:'济南',value:4}],
+    [{name:'济南'}, {name:'洛阳',value:4}],
+    [{name:'洛阳'}, {name:'陈留',value:4}],
+    [{name:'陈留'}, {name:'荥阳汴水',value:4}],
+    [{name:'荥阳汴水'}, {name:'东郡',value:4}],
+    [{name:'东郡'}, {name:'兖州',value:4}],
+    [{name:'兖州'}, {name:'徐州',value:4}],
+    [{name:'徐州'}, {name:'东海',value:4}],
+    [{name:'东海'}, {name:'兖州',value:4}],
+    [{name:'兖州'}, {name:'徐州',value:4}],
+    [{name:'兖州'}, {name:'许县',value:4}],
+    [{name:'许县'}, {name:'淯水',value:4}],
+    [{name:'淯水'}, {name:'徐州',value:4}],
+    [{name:'徐州'}, {name:'官渡',value:4}],
+    [{name:'官渡'}, {name:'白马',value:4}],
+    [{name:'白马'}, {name:'官渡',value:4}],
+    [{name:'官渡'}, {name:'乌巢',value:4}],
+    [{name:'乌巢'}, {name:'冀州',value:4}],
+    [{name:'冀州'}, {name:'兖州',value:4}],
+    [{name:'兖州'}, {name:'徐州',value:4}],
+    [{name:'兖州'}, {name:'许县',value:4}],
+    [{name:'许县'}, {name:'淯水',value:4}],
+    [{name:'淯水'}, {name:'徐州',value:4}],
+    [{name:'徐州'}, {name:'官渡',value:4}],
+    [{name:'官渡'}, {name:'白马',value:4}],
+    [{name:'白马'}, {name:'官渡',value:4}],
+    [{name:'官渡'}, {name:'乌巢',value:4}],
+    [{name:'乌巢'}, {name:'赤壁',value:4}],
+    [{name:'赤壁'}, {name:'长安',value:4}],
+    [{name:'长安'}, {name:'洛阳',value:4}],
+];
+var H2Data = [
+     [{name:'河东郡解县'}, {name:'平原',value:2}],
+    [{name:'平原'}, {name:'徐州',value:2}],
+    [{name:'徐州'}, {name:'许昌',value:2}],
+    [{name:'许昌'}, {name:'白马',value:2}],
+    [{name:'白马'}, {name:'夏口',value:2}],
+    [{name:'夏口'}, {name:'荆州',value:2}],
+    [{name:'荆州'}, {name:'樊城',value:2}],
+    [{name:'樊城'}, {name:'麦城',value:2}],
+    [{name:'麦城'}, {name:'临沮',value:2}],
+
+];
+var H1Data = [
+[{name:'涿郡涿县'}, {name:'安喜县',value:2}],
+    [{name:'安喜县'}, {name:'平原县',value:2}],
+    [{name:'平原县'}, {name:'徐州',value:2}],
+    [{name:'徐州'}, {name:'小沛',value:2}],
+    [{name:'小沛'}, {name:'徐州',value:2}],
+    [{name:'徐州'}, {name:'豫州',value:2}],
+    [{name:'豫州'}, {name:'小沛',value:2}],
+    [{name:'小沛'}, {name:'汝南',value:2}],
+    [{name:'汝南'}, {name:'新野',value:2}],
+    [{name:'新野'}, {name:'隆中',value:2}],
+    [{name:'隆中'}, {name:'赤壁',value:2}],
+    [{name:'赤壁'}, {name:'成都',value:2}],
+    [{name:'成都'}, {name:'汉中',value:2}],
+    [{name:'汉中'}, {name:'夷陵',value:2}],
+    [{name:'夷陵'}, {name:'白帝城',value:2}],
+
+];
+var planePath = 'image://http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd';
+var guan='image://images/guan.png'
+var cao='image://images/cao.png'
+var liu='image://images/liu.png'
+var convertData = function (data) {
+    console.log(data);
+    var res = [];
+    for (var i = 0; i < data.length; i++) {
+        var dataItem = data[i];
+        var fromCoord = geoCoordMap[dataItem[0].name];
+        var toCoord = geoCoordMap[dataItem[1].name];
+        if (fromCoord && toCoord) {
+            res.push({
+                fromName: dataItem[0].name,
+                toName: dataItem[1].name,
+                coords: [fromCoord, toCoord],
+                value: dataItem[1].value
+            });
+        }
+    }
+    return res;
+};
+var color = ['#a6c84c', '#46bee9','#ffa022'];
+//, '#46bee9','#ffa022','#ffa022' 1100 670
+var series = [];
+[['刘备', H1Data],['关羽', H4Data],['曹操',H2Data]].forEach(function (item, i) {
+    //console.log(item,i);
+    series.push({
+        name: item[0] ,
+        type: 'lines',
+        zlevel: 1,
+        effect: {
+            show: true,
+                    period: 2.5, //箭头指向速度，值越小速度越快
+                    trailLength: 0.02, //特效尾迹长度[0,1]值越大，尾迹越长重
+                    symbol: 'arrow', //箭头图标
+                    symbolSize: 5, //图标大小
+            //show: true,
+            //period: 6,
+            //trailLength: 0.7,
+            //color: '#fff',
+            //symbolSize: 3 
+        },
+        lineStyle: {
+            normal: {
+                color: color[i],
+                width: 5,
+                curveness: 0.2,
+                width: 1, //尾迹线条宽度
+                opacity: 1, //尾迹线条透明度
+                        //curveness: .3 //尾迹线条曲直度
+            }
+        },//设置箭头
+       data: convertData(item[1])
+    },
+    {
+        name: item[0] ,
+        type: 'lines',
+        zlevel: 2,
+        symbol: ['none', 'arrow'],
+        symbolSize: 5,
+        effect: {
+            show: true,
+            period: 6,
+            trailLength: 0,
+            symbol: planePath,
+            symbolSize: 15
+        },
+        lineStyle: {
+            normal: {
+                color: color[i],
+                width: 2,
+                opacity: 0.6,
+                curveness: 0.2
+            }
+        },//设置线条风格
+        data: convertData(item[1])
+    },
+    {
+        name: item[0] ,
+        type: 'effectScatter',
+        coordinateSystem: 'geo',
+        zlevel: 2,
+        rippleEffect: {
+            brushType: 'stroke'
+        },//圆点特效
+        label: {
+            normal: {
+                show: true,
+                position: 'right',
+                formatter: '{b}'
+            }
+        },
+        symbolSize: function (val) {
+            return val[2] / 8;
+        },
+        itemStyle: {
+            normal: {
+                color: '#0f0'//圆点颜色
+            }
+        },
+        data: item[1].map(function (dataItem) {
+            return {
+                name: dataItem[1].name,
+                value: geoCoordMap[dataItem[1].name].concat([dataItem[1].value])
+            };//圆环标注
+         
+        }
+        ),
+
+    },
+//被攻击点
+            {
+                type: 'scatter',
+                coordinateSystem: 'geo',
+                zlevel: 2,
+                rippleEffect: {
+                    period: 4,
+                    brushType: 'stroke',
+                    scale: 4
+                },
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'head',
+                        offset:[-15, -20],
+                        color: '#ffa500',
+                        formatter: '{b}',
+                        fontSize:'15',
+                       
+                    },
+                    
+                },
+                symbol: guan,
+                symbolSize: 30,
+                color: '#ff0000',
+                shadowColor : 'rgba(0,0,0,0)', //默认透明
+                data: [{
+                    name: '关羽出生地',
+                    value: [book[27][0],book[27][1]],
+                }],
+            },
+
+            {
+                type: 'scatter',
+                coordinateSystem: 'geo',
+                zlevel: 2,
+                rippleEffect: {
+                    period: 4,
+                    brushType: 'stroke',
+                    scale: 4
+                },
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'head',
+                        offset:[-15, -20],
+                        color: '#ffa500',
+                        formatter: '{b}',
+                        fontSize:'15',
+                       
+                    },
+                    
+                },
+                
+
+            symbol: liu,
+                symbolSize: 30,
+                color: '#ff0000',
+                shadowColor : 'rgba(0,0,0,0)', //默认透明
+                data: [{
+                    name: '刘备出生地',
+                    value: [book[33][0],book[33][1]],
+                },
+                ],
+
+            },
+
+
+ {
+                type: 'scatter',
+                coordinateSystem: 'geo',
+                zlevel: 2,
+                rippleEffect: {
+                    period: 4,
+                    brushType: 'stroke',
+                    scale: 4
+                },
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'head',
+                        offset:[-15, -20],
+                        color: '#ffa500',
+                        formatter: '{b}',
+                        fontSize:'15',             
+                    },
+                },
+                symbol: cao,
+                symbolSize: 30,
+                color: '#ff0000',
+                data: [{
+                    name: '曹操出生地',
+                    value: [book[0][0],book[0][1]],
+                }],
+
+            }
+
+    );
+});
+console.log(series)
+option = {
+    backgroundColor: '#404a59',
+    title : {
+        text: '群英轨迹',
+        left: 'center',
+        textStyle : {
+            color: '#fff',
+            fontSize:25,
+    }
+    },
+    tooltip : {
+        trigger: 'item',
+        backgroundColor: '',  //背景色
+          padding: [15, 15, 15, 15],   //边距
+          borderColor: '#DDDDDF',  //边框颜色
+          borderWidth: 2,    //边框线宽度
+          extraCssText:'text-align: left;',  //文字对齐方式
+        formatter:function(params, ticket, callback){
+            console.log(params);
+           for(var i=0; i<book1.length-1; i++){
+               if(params.data.toName==book1[i][0])
+             {  return book1[i][1];}
+             if(params.data.toName==book2[i][0])
+             {  return book2[i][1];}
+             if(params.data.toName==book3[i][0])
+             {  return book3[i][1];}
+           }
+        }
+    },
+    legend: {
+        orient: 'vertical',
+        top: '70%',
+        right: '5%',
+        data:['刘备','关羽', '曹操'],
+        textStyle: {
+            color: '#fff'
+        },
+        icon:'pin',
+        selectedMode: 'multiple',
+    },
+    geo: {
+        map: 'china',
+        label: {
+            emphasis: {
+                show: true,
+                color:'rgba(151, 169, 89, .5)'
+            }
+        },
+        roam: true,
+        zoom:3,
+        center: [109.936013,33.731189],
+        itemStyle: {
+            normal: {
+                areaColor: '#323c48',
+                 borderColor: '#516a89', //省市边界线00fcff 516a89
+            },
+            emphasis: {
+                areaColor: '#2a333d'
+            }
+        }
+    },
+    series: series
+};
+            myChart.setOption(option);
+            myChart.on('mouseover', function (params) {
+                var dataIndex = params.dataIndex;
+                console.log(params);
+            });
+        </script>
+        	<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+			<script type="text/javascript"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+

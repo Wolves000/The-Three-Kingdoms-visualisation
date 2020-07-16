@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html ng-app = 'test'>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-type=text/html;charset=utf-8"/>
+    <!-- jQuery -->
+
+    <script type="text/javascript" src="jquery-2.0.3.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style type="text/css">
+        .table{
+            width: 1000px;
+            text-align: center;
+        }
+    </style>
+    <title>学生信息管理</title>
+</head>
+
+<body ng-controller = 'main'>
+<div class="">
+    <div id="container">
+<!--        action="db.php" method="POST"-->
+
+        </button>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    var loc1 = [], sco1=[],com1=[];
+    var book=[];
+    var arr = new Array();
+    var arrY = new Array();
+    // //调用ajax来实现异步的加载数据
+    function getusers() {
+        //     $("#ServiceId").change(function(){
+        //         var value=$(this).val();
+        $.ajax({
+            type: "POST",
+            async: false,
+            url: "db.php",
+            data: {},
+            // dataType: "json",
+            success: function (data) {
+                // console.log(data);
+                var a = data.split(' ');
+                book = JSON.parse(a);
+                console.log(data);
+                // for (var i = 0; i < book.length - 1; i++) {
+                //
+                //     arr[i] = book[i][0];
+                //     arrY[i] = book[i][1];
+                //     // arr[i][1]=book[i][3];
+                //
+                // }
+            },
+            // error: function(errmsg) {
+            //     alert("Ajax获取服务器数据出错了！"+ errmsg);
+            // }
+        });
+    }
+    getusers();
+    console.log(book);
+
+</script>
+</html>

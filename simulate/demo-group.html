@@ -1,0 +1,179 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns="http://www.w3.org/1999/xhtml">-->
+<!--<head>-->
+<!--	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />-->
+<!--	<title>获取地区轮廓线</title>-->
+<!--	<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.3">-->
+<!--	</script>-->
+<!--	<style type="text/css">-->
+<!--		body{font-size:13px;margin:10px}-->
+<!--		#container{width:800px;height:500px;border:1px solid gray}-->
+<!--	</style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div id="container"></div>-->
+<!--<div id="divInfo"></div>-->
+<!--<br />-->
+<!--输入省、直辖市或县名称：<input type="text" id="districtName" style="width:80px" value="重庆市">-->
+<!--<input type="button" onclick="getBoundary()" value="获取轮廓线">-->
+
+<!--<script type="text/javascript">-->
+<!--	var map = new BMap.Map("container");-->
+<!--	map.centerAndZoom(new BMap.Point(116.403765, 39.914850), 5);-->
+<!--	map.addControl(new BMap.NavigationControl({type: BMAP_NAVIGATION_CONTROL_SMALL}));-->
+<!--	map.enableScrollWheelZoom();-->
+
+<!--window.onload=function () {-->
+
+
+<!--		var bdary = new BMap.Boundary();-->
+<!--		// var name = document.getElementById("districtName").value;-->
+<!--		bdary.get("河北省", function(rs){       //获取行政区域-->
+<!--			map.clearOverlays();        //清除地图覆盖物-->
+<!--			var count = rs.boundaries.length; //行政区域的点有多少个-->
+<!--			for(var i = 0; i<count; i++){-->
+<!--				var ply = new BMap.Polygon(rs.boundaries[i], {strokeWeight: 2, strokeColor: "#ff0000"}); //建立多边形覆盖物-->
+<!--				map.addOverlay(ply);  //添加覆盖物-->
+<!--				map.setViewport(ply.getPath());    //调整视野-->
+<!--			}-->
+<!--		});-->
+<!--			divInfo.innerHTML = res;-->
+<!--}-->
+
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title></title>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=1nCQCnDr3Nt3GKDVeBmKGe2Y"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/library/GeoUtils/1.2/src/GeoUtils_min.js"></script>
+
+</head>
+<body>
+<div id="allmap" style="width:1000px;height:500px"></div>
+<div id="divInfo"></div>
+</body>
+</html>
+<script type="text/javascript">
+	window.onload = function () {
+		var map = new BMap.Map("allmap");
+		map.centerAndZoom(new BMap.Point(106.258277, 29.498607), 5);
+		map.addControl(new BMap.NavigationControl({type: BMAP_NAVIGATION_CONTROL_SMALL}));
+		map.enableScrollWheelZoom();
+
+
+		var bdary = new BMap.Boundary();
+		var bdary1 = new BMap.Boundary();
+
+		// bdary.get("南昌市", function (rs) {       //获取行政区域
+		// 	// map.clearOverlays();        //清除地图覆盖物
+		// 	var count = rs.boundaries.length; //行政区域的点有多少个
+		// 	if (count === 0) {
+		// 		alert('未能获取当前输入行政区域');
+		// 		return;
+		// 	}
+		// 	var pointArray = [];
+		// 	for (var i = 0; i < count; i++) {
+		//
+		// 		var ply = new BMap.Polygon(rs.boundaries[i]); //建立多边形覆盖物
+		// 		map.addOverlay(ply);  //添加覆盖物
+		// 		pointArray = pointArray.concat(ply.getPath());
+		// 		map.setViewport(pointArray);
+		//
+		// 		var res = "", minX = 115.948277, minY = 28.548607, x = 0, y = 0,pt=null;
+		//
+		// 		for (var i = 0; i < 20; i++) {
+		// 			x = minX + getRandom();
+		// 			y = minY + getRandom();
+		// 			pt = new BMap.Point(x, y);
+		// 			if (BMapLib.GeoUtils.isPointInPolygon(pt, ply)) {
+		// 				var icon1 = new BMap.Icon("小车.png",new BMap.Size(50,50));
+		// 				var marker = marker = new BMap.Marker(new BMap.Point(x, y),{icon:icon1});
+		// 				map.addOverlay(marker);
+		// 				//res += 'marker = new BMap.Marker(new BMap.Point(' + x + ' ,' + y + '));<br/>map.addOverlay(marker);<br/>  ';
+		// 			}
+		// 		}
+		//
+		// 		divInfo.innerHTML = res;
+		// 	}
+		// 	// map.setViewport(pointArray);    //调整视野
+		// 	//addlabel();
+		// });
+		bdary1.get("河北省", function (rs) {       //获取行政区域
+			// map.clearOverlays();        //清除地图覆盖物
+			var count = rs.boundaries.length; //行政区域的点有多少个
+			if (count === 0) {
+				alert('未能获取当前输入行政区域');
+				return;
+			}
+			var pointArray = [];
+			for (var i = 0; i < count; i++) {
+
+				var ply = new BMap.Polygon(rs.boundaries[i]); //建立多边形覆盖物
+				map.addOverlay(ply);  //添加覆盖物
+				pointArray = pointArray.concat(ply.getPath());
+				map.setViewport(pointArray);
+
+				var res = "", minX = 115.464592, minY = 38.873959, x = 0, y = 0,pt=null;
+
+				for (let i = 0; i < 20; i++) {
+
+					x = minX + getRandom();
+					y = minY + getRandom();
+					pt = new BMap.Point(x, y);
+					if (BMapLib.GeoUtils.isPointInPolygon(pt, ply)) {
+						var icon1 = new BMap.Icon("小车.png",new BMap.Size(50,50));
+						var marker1 = marker1 = new BMap.Marker(new BMap.Point(x, y),{icon:icon1});
+						map.addOverlay(marker1);
+						// res += 'marker = new BMap.Marker(new BMap.Point(' + x + ' ,' + y + '));<br/>map.addOverlay(marker);<br/>  ';
+					}
+
+				}
+
+				divInfo.innerHTML = res;
+			}
+			// map.setViewport(pointArray);    //调整视野
+			//addlabel();
+		});
+
+
+		//document.getElementById("divInfo").innerHTML = Math.random()/4;
+
+	}
+
+
+	function getRandom() {
+		return Math.random() / 2;
+	}
+</script>
+</body>
+</html>

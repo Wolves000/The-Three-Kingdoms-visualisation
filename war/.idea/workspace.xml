@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="5a7a11f9-6ada-4f36-8230-3e4e62fcfcd2" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectId" id="1btOGNHYTp93T5cXoSmrC9TNwZa" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="D:/kaiyuangis/QGIS-ISODATA-master" />
+    <property name="settings.editor.selected.configurable" value="preferences.externalTools" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5a7a11f9-6ada-4f36-8230-3e4e62fcfcd2" name="Default Changelist" comment="" />
+      <created>1589447826729</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1589447826729</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="723" y="369" key="#com.intellij.tools.ToolEditorDialog" timestamp="1591169092122">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="723" y="369" key="#com.intellij.tools.ToolEditorDialog/0.0.1920.1080@0.0.1920.1080" timestamp="1591169092122" />
+    <state x="740" y="315" key="FileChooserDialogImpl" timestamp="1591169797628">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="740" y="315" key="FileChooserDialogImpl/0.0.1920.1080@0.0.1920.1080" timestamp="1591169797628" />
+    <state x="461" y="182" key="SettingsEditor" timestamp="1591169093167">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="461" y="182" key="SettingsEditor/0.0.1920.1080@0.0.1920.1080" timestamp="1591169093167" />
+    <state x="645" y="364" key="com.intellij.ide.util.TipDialog" timestamp="1591167541858">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="645" y="364" key="com.intellij.ide.util.TipDialog/0.0.1920.1080@0.0.1920.1080" timestamp="1591167541858" />
+  </component>
+</project>

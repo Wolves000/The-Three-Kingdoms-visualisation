@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=1XjLLEhZhQNUzd93EjU5nOGQ"></script>
+    <script type="text/javascript" src="https://mapv.baidu.com/build/mapv.js"></script>
+    <script type="text/javascript" src="mysql/jquery-2.0.3.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="leaflet/leaflet.css">
+    <script type="text/javascript" src="leaflet/leaflet.js"></script>
+    <!-- 轨迹回放的自定义插件（依赖于leaflet。js） -->
+    <script type="text/javascript" src="leaflet/markerTrack.js"></script>
+    <script type="text/javascript" src="leaflet/em.geometryutil.js"></script>
+    <link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/local.css" />
+    <script type="text/javascript" src="../js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
+
+
+    <style type="text/css">
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        .butn{
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border-radius: .25rem;
+            width: 20rem;
+            border-width: 0;
+            border-radius: 0.4rem;
+            box-shadow: 0 2px 6px 0 rgba(114, 124, 245, .5);
+            position: fixed;
+            Top: 5rem;
+            right: 0rem;
+            -ms-flex: 1 1 auto;
+            flex: 1 1 auto;
+            padding: 0.75rem 1.25rem;
+        }
+        input{
+            color: white;/*输入文字、光标颜色*/
+            -webkit-text-fill-color: white;/*输入文字、placeholder颜色*/
+            caret-color: yellow;/*光标颜色*/
+            font-size: 20px;
+            font-family: 宋体;
+        }
+        .yongyin {
+            width:100px;
+            text-align:center;
+            line-height:100%;
+            padding:0.3em;
+            font:16px Arial,sans-serif bold;
+            font-style:normal;
+            text-decoration:none;
+            margin:2px;
+            vertical-align:text-bottom;
+            zoom:1;
+            outline:none;
+            position:relative;
+            left:30px;
+            font-size-adjust:none;
+            font-stretch:normal;
+            border-radius:50px;
+            box-shadow:0px 1px 2px rgba(0,0,0,0.2);
+            text-shadow:0px 1px 1px rgba(0,0,0,0.3);
+            color:#fefee9;
+            border:0.2px solid #1c6ebf;
+            background-repeat:repeat;
+            background-size:auto;
+            background-origin:padding-box;
+            background-clip:padding-box;
+            background-color: #2121a3;
+            background: linear-gradient(to bottom, #898a93 0%, #2070b4 100%);
+        }
+
+        .yongyin:hover {
+            background: #1a0497;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+          <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="index.html">烽火三国</a>
+          </div>
+          <div class="collapse navbar-collapse navbar-ex1-collapse">
+              <ul id="active" class="nav navbar-nav side-nav">
+
+                <li class="selected"><a href="../index.html"><i class="fa fa-bullseye"></i> 主页</a></li>
+                  <li><a href="../knowledge/index.html"><i class="fa fa-list-ol"></i> 知识图谱</a></li>
+                <li><a href="../war/index.html"><i class="fa fa-tasks"></i> 战争之路</a></li>
+                <li><a href="../heroes/index.html"><i class="fa fa-globe"></i> 群英传</a></li>
+
+                <li><a href="../heatmap/index.html"><i class="fa fa-list-ol"></i> 纷争之地</a></li>
+                <li><a href="../simulate/index.html"><i class="fa fa-font"></i> 战争模拟</a></li>
+              </ul>
+          </div>
+      </nav>
+  </div>
+<div id="map"></div>
+<canvas id="canvas"></canvas>
+<div class='butn' style="background-color:transparent">
+<form >
+    <p style="color:white;height:18px;font-size:18px;font-family:宋体">当前年份为：</p>
+    <input id="xxx" type="text" style="background-color:transparent;height:30px;border-width:1px;"/>
+    <p style="color:white;height:18px;font-size:18px;font-family:宋体">请输入起始年份：</p>
+    <input type ="text"  style="background-color:transparent;height:30px;border-width:1px;"  class="" id="inputValue" name="textie" style="background-color:transparent"/>
+    <p style="color:white;height:20px;font-size:18px;font-family:宋体">请输入终止年份：</p>
+    <input type ="text"  style="background-color:transparent;height:30px;border-width:1px;"  id="inputValue1" name="textie" style="background-color:transparent"/>
+    <p style="color:white;height:20px;font-size:18px;font-family:宋体">请输入人物姓名：</p>
+    <input type ="text" style="background-color:transparent;height:30px;border-width:1px;" id="inputValue3" name="textie" style="background-color:transparent"/>
+<p></p>
+    <input type="button" class="yongyin" style="background-color:transparent;height:30px;font-size:18px;font-family:宋体;border-width:1px;" value="确定"  name="inputValue2" id="inputValue2" style="background-color:transparent"/>
+</form>
+</div>
+
+<script type="text/javascript">
+    var book;
+    var arr = new Array();
+    var arrY = new Array();
+    document.getElementById('inputValue3').value=null;
+    document.getElementById('inputValue').value=null;
+    document.getElementById('inputValue1').value=null;
+    $.ajax({
+        type: 'POST',
+        url: 'mysql/db1.php',
+        async:false,
+
+        success: function (data) {
+            console.log(data);
+            var a = data.split(' ');
+            book = JSON.parse(a);
+            // console.log(a[0]);
+            return book;
+            for (var i = 0; i < book.length - 1; i++) {
+
+                arr[i] = book[i][0];
+                arrY[i] = book[i][1];
+                // arr[i][1]=book[i][3];
+
+            }
+
+        }
+    });
+    // 百度地图API功能
+    var map = new BMap.Map("map", {
+        enableMapClick: false
+    });    // 创建Map实例
+
+    map.centerAndZoom(new BMap.Point(105.403119, 38.028658), 5);  // 初始化地图,设置中心点坐标和地图级别
+    map.enableScrollWheelZoom(true); // 开启鼠标滚轮缩放
+
+    map.setMapStyle({
+        style: 'midnight'
+    });
+
+
+    var data = [];
+
+    // 构造数据
+    var lens=book.length;
+    while (lens--) {
+        //var cityCenter = mapv.utilCityCenter.getCenterByCityName(citys[parseInt(Math.random() * citys.length)]);
+        data.push({
+            geometry: {
+                type: 'Point',
+                coordinates: [book[lens][6], book[lens][7]]
+            },
+            name:book[lens][1],
+            count: 30 * Math.random(),//book[lens][6]*0.7+book[lens][7]*0.3,
+            time: book[lens][2],
+            //pointSize:50,
+        });
+    }
+
+    var dataSet = new mapv.DataSet(data);
+    //console.log(dataSet);
+    var options = {
+
+        gradient: { 0.25: "rgb(0,0,255)", 0.55: "rgb(0,255,255)", 0.75: "rgb(0,255,0)", 0.97: "yellow", 1.0: "rgb(255,0,0)"},
+        max: 30,
+        size:30,
+       // width:100000,
+        animation: {
+            type: 'time',
+            stepsRange: {
+                start: 190,
+                end: 280
+            },
+            trails: 10,
+            duration: 18,
+        },
+        draw: 'heatmap',
+
+    };
+    //console.log(options);
+    var interval1;
+    var interval;
+    var mapvLayer = new mapv.baiduMapLayer(map, dataSet, options);
+    if($("#inputValue2").onclick==null){
+        interval1 = window.setInterval(showmap0,100); //每0.1秒刷新一次
+        var numm=0;
+        function showmap0(){
+            document.getElementById('xxx').value=190+numm%90;
+            numm=numm+1;
+        }
+    }
+    //点击按钮刷新
+    $("#inputValue2").click(function(){//$(document).on('click','#inputValue2',function()
+        //console.log("111");
+        //console.log($('#inputValue').val());
+        window.clearInterval(interval1);
+        window.clearInterval(interval);
+        var map = new BMap.Map("map", {
+            enableMapClick: false
+        });    // 创建Map实例
+
+        map.centerAndZoom(new BMap.Point(105.403119, 38.028658), 5);  // 初始化地图,设置中心点坐标和地图级别
+        map.enableScrollWheelZoom(true); // 开启鼠标滚轮缩放
+
+        map.setMapStyle({
+            style: 'midnight'
+        });
+
+
+        var data = [];
+        var book;
+        var val1= $('#inputValue').val();
+        var val2=$('#inputValue1').val();
+        var val3=$('#inputValue3').val();
+
+        if(val1==""){
+            document.getElementById('inputValue').value=190;
+        }
+        if(val2=="")
+        {
+            document.getElementById('inputValue1').value=280;
+        }
+        //console.log(val3);
+        $.ajax({
+            type: 'POST',
+            url: 'mysql/db2.php',
+            async:false,
+            data:{value:[val1,val2,val3]},
+            success: function (data) {
+                //console.log(data);
+                var a = data.split(' ');
+                //console.log(a);
+                book = JSON.parse(a);
+                // console.log(a[0]);
+                return book;
+                for (var i = 0; i < book.length - 1; i++) {
+
+                    arr[i] = book[i][0];
+                    arrY[i] = book[i][1];
+                    // arr[i][1]=book[i][3];
+
+                }
+
+            }
+        });
+
+        var lens=book.length;
+        //console.log(lens);
+        while (lens--) {
+            //var cityCenter = mapv.utilCityCenter.getCenterByCityName(citys[parseInt(Math.random() * citys.length)]);
+            data.push({
+                geometry: {
+                    type: 'Point',
+                    coordinates: [book[lens][6], book[lens][7]]
+                },
+                name:book[lens][1],
+                count: 30 * Math.random(),//book[lens][6]*0.7+book[lens][7]*0.3,
+                time: book[lens][2],
+                //pointSize:50,
+            });
+        }
+
+        var dataSet = new mapv.DataSet(data);
+        //console.log(dataSet);
+        var options = {
+
+            gradient: { 0.25: "rgb(0,0,255)", 0.55: "rgb(0,255,255)", 0.75: "rgb(0,255,0)", 0.97: "yellow", 1.0: "rgb(255,0,0)"},
+            max: 30,
+            size:30,
+            // width:100000,
+            animation: {
+                type: 'time',
+                stepsRange: {
+                    start: 190,
+                    end: 280
+                },
+                trails: 10,
+                duration: ($('#inputValue1').val()-$('#inputValue').val())/3,
+            },
+            draw: 'heatmap',
+
+        };
+        //console.log(($('#inputValue1').val()-$('#inputValue').val())/10);
+        var num=0;
+        var num1=0;
+         interval = window.setInterval(showmap,100); //每0.1秒刷新一次
+        function showmap(){
+            if(num==0){
+                if(num1!=0){
+                window.clearInterval(interval);}
+                num1=num1+1;
+                document.getElementById('xxx').value =$('#inputValue').val();
+      var mapvLayer = new mapv.baiduMapLayer(map, dataSet, options);
+            num=num+1;}
+            else{num=num+1;
+                //($('#inputValue1').val()-$('#inputValue').val())
+                document.getElementById('xxx').value =parseInt($('#inputValue').val())+num%($('#inputValue1').val()-$('#inputValue').val());
+
+            }
+        }
+    });
+
+</script>
+
+</body>
+</html>

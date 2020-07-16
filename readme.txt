@@ -1,0 +1,9 @@
+工程环境：apache2.4.39+MySQL5.7.26
+数据：data/
+数据库名称:sanguo,用户名:cc,密码：cao123
+工程主要文件夹：
+heatmap
+heroes
+knowledge
+simulate
+索引文件index.html

@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>战争模拟</title>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=1nCQCnDr3Nt3GKDVeBmKGe2Y"></script>
+<!--    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=jvj59rNxihGRKPk7ZMqLQRplVc15egYV">-->
+    <link rel="stylesheet" type="text/css" href="css/moni.css">
+<!--    <link rel="stylesheet" type="text/css" href="moni/loader.css">-->
+ 
+<!--        //v2.0版本的引用方式：src="http://api.map.baidu.com/api?v=2.0&ak=您的密钥"-->
+<!--    </script>-->
+    <script type="text/javascript" src="http://api.map.baidu.com/library/GeoUtils/1.2/src/GeoUtils_min.js"></script>
+    <script type="text/javascript" src="mysql/jquery-2.0.3.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/local.css" />
+<!--    <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>-->
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<!--    <script type="text/javascript" src="jquery-2.0.3.min.js"></script>-->
+    <script type="text/javascript">
+        // 等待所有加载
+        $(window).load(function(){
+            $('body').addClass('loaded');
+            $('#loader-wrapper .load_title').remove();
+        });
+    </script>
+    <div id="loader-wrapper">
+        <div id="loader"></div>
+        <div class="loader-section section-left"></div>
+        <div class="loader-section section-right"></div>
+        <div class="load_title">正在加载，请稍后....<br><span>加油</span></div>
+    </div>
+    <!--页面加载end-->
+</head>
+<body>
+    <div id="wrapper">
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+          <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="index.html">烽火三国</a>
+          </div>
+          <div class="collapse navbar-collapse navbar-ex1-collapse">
+              <ul id="active" class="nav navbar-nav side-nav">
+                <li class="selected"><a href="../index.html"><i class="fa fa-bullseye"></i> 主页</a></li>
+                  <li><a href="../knowledge/index.html"><i class="fa fa-list-ol"></i> 知识图谱</a></li>
+                <li><a href="../war/index.html"><i class="fa fa-tasks"></i> 战争之路</a></li>
+                <li><a href="../heroes/index.html"><i class="fa fa-globe"></i> 群英传</a></li>
+
+                <li><a href="../heatmap/index.html"><i class="fa fa-list-ol"></i> 纷争之地</a></li>
+                <li><a href="../simulate/index.html"><i class="fa fa-font"></i> 战争模拟</a></li>
+              </ul>
+          </div>
+      </nav>
+  </div>
+<div id="container"></div>
+<div id="divInfo"></div>
+<div style="position: absolute;top: 70px;left: 230px">
+<!--    <input class="button" type="button" value="开始模拟" onclick="Show();">-->
+    <button class="button" onclick="Show()">战争模拟</button>
+</div>
+<div id="shade" class="c1 hide">
+</div>
+<div  id="modal" class="c2 hide">
+    <a class="delete_right" onclick="Hide()"></a>
+    <h2 style="color: whitesmoke">战争模拟</h2>
+    <!--将用户输入的user,和pass提交到login.php-->
+<form >
+
+    <div style="float: left; margin-left: 1px;margin-right: 5px;margin-top: 20px"  class="inputBox"><input class="inp" type="text" name="user" value="" required="required" list="typelist" placeholder=   "      请输入交战国"><label class="lab">所属国家</label><datalist id="typelist">
+        　　<option>蜀国</option>
+        　　<option>魏国</option>
+        <option>吴国</option>
+    </datalist></div> <div style="float: right;margin-left: 1px;margin-right: 5px;margin-top: 20px" class="inputBox"><input class="inp" type="text" name="user1" value="" required="required" list="typelist1" placeholder=   "      请输入交战国"><label class="lab">所属国家</label><datalist id="typelist1">
+    　　<option>蜀国</option>
+    　　<option>魏国</option>
+    <option>吴国</option>
+</datalist></div>
+        <div style="float: left; margin-left: 1px;margin-right: 5px;margin-top: 20px"  class="inputBox"><input class="inp" type="number" id="zd" name="pass" value=""required="required"placeholder="      请输入参战人数"><label class="lab">参战人数</label></div>
+        <div style="float: right;margin-left: 1px;margin-right: 5px;margin-top: 20px" class="inputBox"><input class="inp" type="number" name="pass1" value=""required="required"placeholder="      请输入参战人数"><label class="lab">参战人数</label></div>
+        <div style="float: left; margin-left: 1px;margin-right: 5px;margin-top: 20px"  class="inputBox"><input class="inp" type="number" name="confirm" value=""placeholder="      请输入将领加成"><label class="lab">将领加成</label></div>
+        <div style="float: right;margin-left: 1px;margin-right: 5px;margin-top: 20px" class="inputBox"><input class="inp" type="number" name="confirm1" value=""placeholder="      请输入将领加成"><label class="lab">将领加成</label></div>
+        <div style="float: left; margin-left: 1px;margin-right: 5px;margin-top: 20px"  class="inputBox"><input class="inp" type="number" value="" name="codeNum" placeholder="      请输入交战地属"><label class="lab">交战地属</label></div>
+        <div style="float: right;margin-left: 1px;margin-right: 5px;margin-top: 20px" class="inputBox"><input class="inp" type="number" value="" name="codeNum1" placeholder="      请输入交战地属"><label class="lab">交战地属</label></div>
+        <div style="float: right;margin-right: 10px;margin-top: 40px">
+            <input type="button" style="background-color: #5c6c68;border: none;
+    font-size: 20px;
+    color: #FFFFFF;
+    padding: 10px;
+    width: 100px;
+    text-align: center;" name="sub" id="sub" value="模拟">
+            <button class="button" onclick='Hide();'>取消</button>
+
+<!--        <img src="code.php" style="width:100px;height:25px;" id="code"/>-->
+
+</div>
+    </form>
+
+</div>
+<script type="text/javascript">
+    // 创建地图实例
+    function Show() {
+        document.getElementById('shade').classList.remove('hide');
+        document.getElementById('modal').classList.remove('hide');
+    }
+
+    function Hide() {
+        document.getElementById('shade').classList.add('hide');
+        document.getElementById('modal').classList.add('hide');
+    }
+
+    window.onload = function () {
+        var map = new BMap.Map("container");
+        // 创建点坐标
+        var point = new BMap.Point(114.404, 30.415);
+        // 初始化地图，设置中心点坐标和地图级别
+        map.centerAndZoom(point, 9);
+        map.enableScrollWheelZoom();    // 启动鼠标滚轮操作
+        var mapStyle={  style : "midnight" }
+        map.setMapStyle(mapStyle);
+        var bdary = new BMap.Boundary();
+        var bdary1 = new BMap.Boundary();
+        var bdary2 = new BMap.Boundary();
+        var wei=["山东省", "山西省","河南省","河北省","甘肃省","辽宁省","新疆维吾尔自治区","内蒙古自治区","宁夏回族自治区"];
+        var shu=["云南省","贵州省","重庆市","四川省","陕西省"];
+        var wu=["湖南省", "湖北省","广东省","广西省", "江西省","浙江省","福建省", "台湾省","海南省","安徽省", "江苏省"];
+        var weiX=[119.10009,112.548965,114.016808,115.464592,103.834251,123.464539,87.61676,111.74868,105.895569];
+        var weiY=[35.0904,37.870369,33.58149,38.873959,36.061123,41.677528,43.82531,40.842621,36.9547];
+        var shuX=[102.83297,106.628159,106.550545,104.066147,108.939636];
+        var shuY=[24.880014,26.646847,29.563747,30.57288,34.342735];
+        var wuX=[112.938904,114.304695,113.264359,109.415611,115.85817,120.210167,119.296867,121.520076,110.19989,117.22715,118.796539];
+        var wuY=[28.228258,30.593309,23.12908,24.325451,28.68268,30.245859,26.074232,25.030724,20.04422,31.820431,32.058441];
+        var arrdata=[];
+
+        // var icon = new BMap.Icon("image/testwei.png",new BMap.Size(100,100));
+        // var marker = marker = new BMap.Marker(new BMap.Point(113.264359, 30.593309),{icon:icon});
+        // map.addOverlay(marker);
+        for(let w=0;w<wei.length;w++){
+        bdary.get(wei[w], function (rs) {       //获取行政区域
+            // map.clearOverlays();        //清除地图覆盖物
+            var count = rs.boundaries.length; //行政区域的点有多少个
+            if (count === 0) {
+                alert('未能获取当前输入行政区域');
+                return;
+            }
+            var pointArray = [];
+            for (var i = 0; i < count; i++) {
+
+                var ply = new BMap.Polygon(rs.boundaries[i],{fillColor:"#fee0d2"}); //建立多边形覆盖物
+                map.addOverlay(ply);  //添加覆盖物
+                pointArray = pointArray.concat(ply.getPath());
+                map.setViewport(pointArray);
+
+                var res = "", minX = weiX[w], minY = weiY[w], x = 0, y = 0,pt=null;
+
+                for (let i = 0; i < 20; i++) {
+                    x = minX + getRandom();
+                    y = minY + getRandom();
+                    pt = new BMap.Point(x, y);
+                    if (BMapLib.GeoUtils.isPointInPolygon(pt, ply)) {
+                        var icon1 = new BMap.Icon("image/weii.png",new BMap.Size(30,30));
+                        var marker = marker = new BMap.Marker(new BMap.Point(x, y),{icon:icon1});
+                        map.addOverlay(marker);
+                        //res += 'marker = new BMap.Marker(new BMap.Point(' + x + ' ,' + y + '));<br/>map.addOverlay(marker);<br/>  ';
+                    }
+                }
+
+                divInfo.innerHTML = res;
+            }	});}
+        for(let s=0;s<shu.length;s++){
+        bdary1.get(shu[s], function (rs) {       //获取行政区域
+            // map.clearOverlays();        //清除地图覆盖物
+            var count = rs.boundaries.length; //行政区域的点有多少个
+            if (count === 0) {
+                alert('未能获取当前输入行政区域');
+                return;
+            }
+            var pointArray = [];
+            for (var i = 0; i < count; i++) {
+
+                var ply = new BMap.Polygon(rs.boundaries[i],{fillColor:"#a1d99b"}); //建立多边形覆盖物
+                map.addOverlay(ply);  //添加覆盖物
+                pointArray = pointArray.concat(ply.getPath());
+                map.setViewport(pointArray);
+
+                var res = "", minX =shuX[s], minY = shuY[s], x = 0, y = 0,pt=null;
+
+                for (let i = 0; i < 20; i++) {
+                    x = minX + getRandom();
+                    y = minY + getRandom();
+                    pt = new BMap.Point(x, y);
+                    if (BMapLib.GeoUtils.isPointInPolygon(pt, ply)) {
+                        var icon1 = new BMap.Icon("image/shuu.png",new BMap.Size(50,50));
+                        var marker1 = marker1 = new BMap.Marker(new BMap.Point(x, y),{icon:icon1});
+                        map.addOverlay(marker1);
+                        //res += 'marker = new BMap.Marker(new BMap.Point(' + x + ' ,' + y + '));<br/>map.addOverlay(marker);<br/>  ';
+                    }
+                }
+
+                divInfo.innerHTML = res;
+            }
+            // map.setViewport(pointArray);    //调整视野
+            //addlabel();
+        });}
+        for(let u=0;u<wu.length;u++){
+            bdary2.get(wu[u], function (rs) {       //获取行政区域
+                // map.clearOverlays();        //清除地图覆盖物
+                var count = rs.boundaries.length; //行政区域的点有多少个
+                if (count === 0) {
+                    alert('未能获取当前输入行政区域');
+                    return;
+                }
+                var pointArray = [];
+                for (var i = 0; i < count; i++) {
+
+                    var ply = new BMap.Polygon(rs.boundaries[i],{fillColor:"#fec44f"}); //建立多边形覆盖物
+                    map.addOverlay(ply);  //添加覆盖物
+                    pointArray = pointArray.concat(ply.getPath());
+                    map.setViewport(pointArray);
+
+                    var res = "", minX =wuX[u], minY = wuY[u], x = 0, y = 0,pt=null;
+
+                    for (let i = 0; i < 20; i++) {
+                        x = minX + getRandom();
+                        y = minY + getRandom();
+                        pt = new BMap.Point(x, y);
+                        if (BMapLib.GeoUtils.isPointInPolygon(pt, ply)) {
+                            var icon2 = new BMap.Icon("image/wuu.png",new BMap.Size(50,50));
+                            var marker2 = marker2 = new BMap.Marker(new BMap.Point(x, y),{icon:icon2});
+                            map.addOverlay(marker2);
+                            //res += 'marker = new BMap.Marker(new BMap.Point(' + x + ' ,' + y + '));<br/>map.addOverlay(marker);<br/>  ';
+                        }
+                    }
+
+                    divInfo.innerHTML = res;
+                }
+                // map.setViewport(pointArray);    //调整视野
+                //addlabel();
+            });}
+        $('#sub').click(function () {
+
+            var dat = $(" input[ name='pass' ] ").val();
+            var dat1 = $(" input[ name='pass1' ] ").val();
+            var dat2 = $(" input[ name='user' ] ").val();
+            var dat3 = $(" input[ name='user1' ] ").val();
+            var dat4 = $(" input[ name='confirm' ] ").val();
+            var dat5 = $(" input[ name='comfirm1' ] ").val();
+            var dat6 = $(" input[ name='codeNum' ] ").val();
+            var dat7 = $(" input[ name='codeNum1' ] ").val();
+            // var dat8 = $(" input[ name='pass1' ] ").val();
+
+            // console.log(data)
+
+            // alert(data)
+            $.ajax({
+                type: 'post',
+                url: 'suan.php',
+                async: false,
+                data: {value: [dat, dat1, dat2, dat3, dat4, dat5, dat6,dat7]},
+                // dataType:JSON,
+                success: function (data) {
+                    Hide();
+                    console.log(data);
+                    data = eval(data);
+                    if(data[0]>data[1]){
+                        alert(data[2]+"获胜");
+                    }
+                    else {
+                        alert(data[3]+"获胜");
+                    }
+
+                    arrdata = data;
+
+                }
+            });
+
+            console.log(arrdata[0]);
+            var l = 0;
+
+            // var bdary1 = new BMap.Boundary();
+            var arrc1 = ["长沙市", "信阳市"];
+            var arrcX1 = [112.938904, 114.91878];
+            var arrcY1 = [28.228258, 32.00997];
+            var arrc = ["南昌市", "武汉市"];
+            var arrcX = [115.948277, 114.378277];
+            var arrcY = [28.548607, 30.898607];
+            map.clearOverlays();
+
+            //魏国
+            if (arrdata[2] == "魏国"){
+                for (let h = 0; h < wei.length; h++) {
+                    console.log(h);
+                    bdary.get(wei[h], function (rs) {       //获取行政区域
+                        if (h == 0) {
+                            console.log(h);
+
+                        }    //清除地图覆盖物}
+
+                        var count = rs.boundaries.length; //行政区域的点有多少个
+                        if (count === 0) {
+                            alert('未能获取当前输入行政区域');
+                            return;
+                        }
+                        // console.log(arrcX[h]);
+                        var pointArray = [];
+                        // if(l<2)  {
+                        for (var i = 0; i < count; i++) {
+
+                            var ply = new BMap.Polygon(rs.boundaries[i],{fillColor:"#fee0d2"}); //建立多边形覆盖物
+                            map.addOverlay(ply);  //添加覆盖物
+                            pointArray = pointArray.concat(ply.getPath());
+                            map.setViewport(pointArray);
+
+                            var res = "", minX = weiX[h], minY = weiY[h], x = 0, y = 0, pt = null;
+
+
+                            for (let i = 0; i < arrdata[0]; i++) {
+                                x = minX + getRandom();
+                                y = minY + getRandom();
+                                pt = new BMap.Point(x, y);
+                                if (BMapLib.GeoUtils.isPointInPolygon(pt, ply)) {
+                                    var icon1 = new BMap.Icon("image/weii.png", new BMap.Size(50, 50));
+                                    var marker = marker = new BMap.Marker(new BMap.Point(x, y), {icon: icon1});
+                                    map.addOverlay(marker);
+                                    //res += 'marker = new BMap.Marker(new BMap.Point(' + x + ' ,' + y + '));<br/>map.addOverlay(marker);<br/>  ';
+                                }
+                            }
+
+                            divInfo.innerHTML = res;
+                        }
+                        // map.setViewport(pointArray);    //调整视野
+                        //addlabel();
+                    });
+                }
+        }
+            else if(arrdata[3]=="魏国"){
+                for (let h = 0; h < wei.length; h++) {
+                    console.log(h);
+                    bdary.get(wei[h], function (rs) {       //获取行政区域
+                        if (h == 0) {
+                            console.log(h);
+
+                        }    //清除地图覆盖物}
+
+                        var count = rs.boundaries.length; //行政区域的点有多少个
+                        if (count === 0) {
+                            alert('未能获取当前输入行政区域');
+                            return;
+                        }
+                        // console.log(arrcX[h]);
+                        var pointArray = [];
+                        // if(l<2)  {
+                        for (var i = 0; i < count; i++) {
+
+                            var ply = new BMap.Polygon(rs.boundaries[i],{fillColor:"#fee0d2"}); //建立多边形覆盖物
+                            map.addOverlay(ply);  //添加覆盖物
+                            pointArray = pointArray.concat(ply.getPath());
+                            map.setViewport(pointArray);
+
+                            var res = "", minX = weiX[h], minY = weiY[h], x = 0, y = 0, pt = null;
+
+
+                            for (let i = 0; i < arrdata[1]; i++) {
+                                x = minX + getRandom();
+                                y = minY + getRandom();
+                                pt = new BMap.Point(x, y);
+                                if (BMapLib.GeoUtils.isPointInPolygon(pt, ply)) {
+                                    var icon1 = new BMap.Icon("image/weii.png", new BMap.Size(50, 50));
+                                    var marker = marker = new BMap.Marker(new BMap.Point(x, y), {icon: icon1});
+                                    map.addOverlay(marker);
+                                    //res += 'marker = new BMap.Marker(new BMap.Point(' + x + ' ,' + y + '));<br/>map.addOverlay(marker);<br/>  ';
+                                }
+                            }
+
+                            divInfo.innerHTML = res;
+                        }
+                        // map.setViewport(pointArray);    //调整视野
+                        //addlabel();
+                    });
+                }
+            }
+            else{
+                for(let w=0;w<wei.length;w++){
+                    bdary.get(wei[w], function (rs) {       //获取行政区域
+                        // map.clearOverlays();        //清除地图覆盖物
+                        var count = rs.boundaries.length; //行政区域的点有多少个
+                        if (count === 0) {
+                            alert('未能获取当前输入行政区域');
+                            return;
+                        }
+                        var pointArray = [];
+                        for (var i = 0; i < count; i++) {
+
+                            var ply = new BMap.Polygon(rs.boundaries[i],{fillColor:"#fee0d2"}); //建立多边形覆盖物
+                            map.addOverlay(ply);  //添加覆盖物
+                            pointArray = pointArray.concat(ply.getPath());
+                            map.setViewport(pointArray);
+
+                            var res = "", minX = weiX[w], minY = weiY[w], x = 0, y = 0,pt=null;
+
+                            for (let i = 0; i < 20; i++) {
+                                x = minX + getRandom();
+                                y = minY + getRandom();
+                                pt = new BMap.Point(x, y);
+                                if (BMapLib.GeoUtils.isPointInPolygon(pt, ply)) {
+                                    var icon1 = new BMap.Icon("image/weii.png",new BMap.Size(30,30));
+                                    var marker = marker = new BMap.Marker(new BMap.Point(x, y),{icon:icon1});
+                                    map.addOverlay(marker);
+                                    //res += 'marker = new BMap.Marker(new BMap.Point(' + x + ' ,' + y + '));<br/>map.addOverlay(marker);<br/>  ';
+                                }
+                            }
+
+                            divInfo.innerHTML = res;
+                        }	});}
+            }
+
+            //蜀国
+            if (arrdata[2] == "蜀国"){
+                for (let k = 0; k < shu.length; k++) {
+                    console.log(k);
+                    bdary1.get(shu[k], function (rs) {       //获取行政区域
+                        if(k==0){
+                            console.log(k);
+
+                        }    //清除地图覆盖物}
+                        var count = rs.boundaries.length; //行政区域的点有多少个
+                        if (count === 0) {
+                            alert('未能获取当前输入行政区域');
+                            return;
+                        }
+                        // console.log(arrcX[h]);
+                        var pointArray = [];
+                        // if(l<2)  {
+                        for (var i = 0; i < count; i++) {
+
+                            var ply = new BMap.Polygon(rs.boundaries[i],{fillColor:"#a1d99b"}); //建立多边形覆盖物
+                            map.addOverlay(ply);  //添加覆盖物
+                            pointArray = pointArray.concat(ply.getPath());
+                            map.setViewport(pointArray);
+
+                            var res = "", minX = shuX[k], minY =shuY[k], x = 0, y = 0, pt = null;
+
+
+                            for (let i = 0; i < arrdata[0]; i++) {
+                                x = minX + getRandom();
+                                y = minY + getRandom();
+                                pt = new BMap.Point(x, y);
+                                if (BMapLib.GeoUtils.isPointInPolygon(pt, ply)) {
+                                    var icon1 = new BMap.Icon("image/shuu.png", new BMap.Size(50, 50));
+                                    var marker = marker = new BMap.Marker(new BMap.Point(x, y), {icon: icon1});
+                                    map.addOverlay(marker);
+                                    //res += 'marker = new BMap.Marker(new BMap.Point(' + x + ' ,' + y + '));<br/>map.addOverlay(marker);<br/>  ';
+                                }
+                            }
+
+                            divInfo.innerHTML = res;
+                        }
+                        // map.setViewport(pointArray);    //调整视野
+                        //addlabel();
+                    });}
+            }
+            else if(arrdata[3]=="蜀国"){
+                for (let k = 0; k < shu.length; k++) {
+                    console.log(k);
+                    bdary1.get(shu[k], function (rs) {       //获取行政区域
+                        if(k==0){
+                            console.log(k);
+
+                        }    //清除地图覆盖物}
+                        var count = rs.boundaries.length; //行政区域的点有多少个
+                        if (count === 0) {
+                            alert('未能获取当前输入行政区域');
+                            return;
+                        }
+                        // console.log(arrcX[h]);
+                        var pointArray = [];
+                        // if(l<2)  {
+                        for (var i = 0; i < count; i++) {
+
+                            var ply = new BMap.Polygon(rs.boundaries[i],{fillColor:"#a1d99b"}); //建立多边形覆盖物
+                            map.addOverlay(ply);  //添加覆盖物
+                            pointArray = pointArray.concat(ply.getPath());
+                            map.setViewport(pointArray);
+
+                            var res = "", minX = shuX[k], minY =shuY[k], x = 0, y = 0, pt = null;
+
+
+                            for (let i = 0; i < arrdata[1]; i++) {
+                                x = minX + getRandom();
+                                y = minY + getRandom();
+                                pt = new BMap.Point(x, y);
+                                if (BMapLib.GeoUtils.isPointInPolygon(pt, ply)) {
+                                    var icon1 = new BMap.Icon("image/shuu.png", new BMap.Size(50, 50));
+                                    var marker = marker = new BMap.Marker(new BMap.Point(x, y), {icon: icon1});
+                                    map.addOverlay(marker);
+                                    //res += 'marker = new BMap.Marker(new BMap.Point(' + x + ' ,' + y + '));<br/>map.addOverlay(marker);<br/>  ';
+                                }
+                            }
+
+                            divInfo.innerHTML = res;
+                        }
+                        // map.setViewport(pointArray);    //调整视野
+                        //addlabel();
+                    });}
+            }
+            else{
+                for(let s=0;s<shu.length;s++){
+                    bdary1.get(shu[s], function (rs) {       //获取行政区域
+                        // map.clearOverlays();        //清除地图覆盖物
+                        var count = rs.boundaries.length; //行政区域的点有多少个
+                        if (count === 0) {
+                            alert('未能获取当前输入行政区域');
+                            return;
+                        }
+                        var pointArray = [];
+                        for (var i = 0; i < count; i++) {
+
+                            var ply = new BMap.Polygon(rs.boundaries[i],{fillColor:"#a1d99b"}); //建立多边形覆盖物
+                            map.addOverlay(ply);  //添加覆盖物
+                            pointArray = pointArray.concat(ply.getPath());
+                            map.setViewport(pointArray);
+
+                            var res = "", minX =shuX[s], minY = shuY[s], x = 0, y = 0,pt=null;
+
+                            for (let i = 0; i < 20; i++) {
+                                x = minX + getRandom();
+                                y = minY + getRandom();
+                                pt = new BMap.Point(x, y);
+                                if (BMapLib.GeoUtils.isPointInPolygon(pt, ply)) {
+                                    var icon1 = new BMap.Icon("image/shuu.png",new BMap.Size(50,50));
+                                    var marker1 = marker1 = new BMap.Marker(new BMap.Point(x, y),{icon:icon1});
+                                    map.addOverlay(marker1);
+                                    //res += 'marker = new BMap.Marker(new BMap.Point(' + x + ' ,' + y + '));<br/>map.addOverlay(marker);<br/>  ';
+                                }
+                            }
+
+                            divInfo.innerHTML = res;
+                        }
+                        // map.setViewport(pointArray);    //调整视野
+                        //addlabel();
+                    });}
+            }
+
+            //吴国
+            if (arrdata[2] == "吴国"){
+                for (let g = 0; g < wu.length; g++) {
+                    console.log(g);
+                    bdary2.get(wu[g], function (rs) {       //获取行政区域
+                        if(g==0){
+                            console.log(g);
+
+                        }    //清除地图覆盖物}
+                        var count = rs.boundaries.length; //行政区域的点有多少个
+                        if (count === 0) {
+                            alert('未能获取当前输入行政区域');
+                            return;
+                        }
+                        // console.log(arrcX[h]);
+                        var pointArray = [];
+                        // if(l<2)  {
+                        for (var i = 0; i < count; i++) {
+
+                            var ply = new BMap.Polygon(rs.boundaries[i],{fillColor:"#fec44f"}); //建立多边形覆盖物
+                            map.addOverlay(ply);  //添加覆盖物
+                            pointArray = pointArray.concat(ply.getPath());
+                            map.setViewport(pointArray);
+
+                            var res = "", minX = wuX[g], minY =wuY[g], x = 0, y = 0, pt = null;
+
+
+                            for (let i = 0; i < arrdata[0]; i++) {
+                                x = minX + getRandom();
+                                y = minY + getRandom();
+                                pt = new BMap.Point(x, y);
+                                if (BMapLib.GeoUtils.isPointInPolygon(pt, ply)) {
+                                    var icon1 = new BMap.Icon("image/wuu.png", new BMap.Size(50, 50));
+                                    var marker = marker = new BMap.Marker(new BMap.Point(x, y), {icon: icon1});
+                                    map.addOverlay(marker);
+                                    //res += 'marker = new BMap.Marker(new BMap.Point(' + x + ' ,' + y + '));<br/>map.addOverlay(marker);<br/>  ';
+                                }
+                            }
+
+                            divInfo.innerHTML = res;
+                        }
+                        // map.setViewport(pointArray);    //调整视野
+                        //addlabel();
+                    });}
+            }
+            else if(arrdata[3]=="蜀国"){
+                for (let g = 0; g < wu.length; g++) {
+                    console.log(g);
+                    bdary2.get(wu[g], function (rs) {       //获取行政区域
+                        if(g==0){
+                            console.log(g);
+
+                        }    //清除地图覆盖物}
+                        var count = rs.boundaries.length; //行政区域的点有多少个
+                        if (count === 0) {
+                            alert('未能获取当前输入行政区域');
+                            return;
+                        }
+                        // console.log(arrcX[h]);
+                        var pointArray = [];
+                        // if(l<2)  {
+                        for (var i = 0; i < count; i++) {
+
+                            var ply = new BMap.Polygon(rs.boundaries[i],{fillColor:"#fec44f"}); //建立多边形覆盖物
+                            map.addOverlay(ply);  //添加覆盖物
+                            pointArray = pointArray.concat(ply.getPath());
+                            map.setViewport(pointArray);
+
+                            var res = "", minX = wuX[g], minY =wuY[g], x = 0, y = 0, pt = null;
+
+
+                            for (let i = 0; i < arrdata[1]; i++) {
+                                x = minX + getRandom();
+                                y = minY + getRandom();
+                                pt = new BMap.Point(x, y);
+                                if (BMapLib.GeoUtils.isPointInPolygon(pt, ply)) {
+                                    var icon1 = new BMap.Icon("image/wuu.png", new BMap.Size(50, 50));
+                                    var marker = marker = new BMap.Marker(new BMap.Point(x, y), {icon: icon1});
+                                    map.addOverlay(marker);
+                                    //res += 'marker = new BMap.Marker(new BMap.Point(' + x + ' ,' + y + '));<br/>map.addOverlay(marker);<br/>  ';
+                                }
+                            }
+
+                            divInfo.innerHTML = res;
+                        }
+                        // map.setViewport(pointArray);    //调整视野
+                        //addlabel();
+                    });}
+            }
+            else{
+                for(let u=0;u<wu.length;u++){
+                    bdary2.get(wu[u], function (rs) {       //获取行政区域
+                        // map.clearOverlays();        //清除地图覆盖物
+                        var count = rs.boundaries.length; //行政区域的点有多少个
+                        if (count === 0) {
+                            alert('未能获取当前输入行政区域');
+                            return;
+                        }
+                        var pointArray = [];
+                        for (var i = 0; i < count; i++) {
+
+                            var ply = new BMap.Polygon(rs.boundaries[i],{fillColor:"#fec44f"}); //建立多边形覆盖物
+                            map.addOverlay(ply);  //添加覆盖物
+                            pointArray = pointArray.concat(ply.getPath());
+                            map.setViewport(pointArray);
+
+                            var res = "", minX =wuX[u], minY = wuY[u], x = 0, y = 0,pt=null;
+
+                            for (let i = 0; i < 20; i++) {
+                                x = minX + getRandom();
+                                y = minY + getRandom();
+                                pt = new BMap.Point(x, y);
+                                if (BMapLib.GeoUtils.isPointInPolygon(pt, ply)) {
+                                    var icon2 = new BMap.Icon("image/wuu.png",new BMap.Size(50,50));
+                                    var marker2 = marker2 = new BMap.Marker(new BMap.Point(x, y),{icon:icon2});
+                                    map.addOverlay(marker2);
+                                    //res += 'marker = new BMap.Marker(new BMap.Point(' + x + ' ,' + y + '));<br/>map.addOverlay(marker);<br/>  ';
+                                }
+                            }
+
+                            divInfo.innerHTML = res;
+                        }
+                        // map.setViewport(pointArray);    //调整视野
+                        //addlabel();
+                    });}
+            }
+
+
+
+        })
+        }
+            function getRandom() {
+                return  4- 8*Math.random();
+
+    }
+</script>
+</body>
+</html>

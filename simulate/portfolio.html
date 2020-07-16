@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>路径轨迹回放</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="leaflet/leaflet.css" />
+    <script src="leaflet/leaflet.js"></script>
+
+</head>
+
+<style>
+    * { margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    #mapid { width:100%; height:100%; }
+    .input-card{
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border-radius: .25rem;
+        width: 8rem;
+        border-width: 0;
+        border-radius: 0.4rem;
+        box-shadow: 0 2px 6px 0 rgba(114, 124, 245, .5);
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        -ms-flex: 1 1 auto;
+        flex: 1 1 auto;
+        padding: 0.75rem 1.25rem;
+    }
+</style>
+
+<body>
+
+<div id="mapid" style="z-index: 10" ></div>
+<div class="input-card">
+    <button id="run"  οnclick="start()">run</button>
+    <button id="stop" οnclick="stop()">stop</button>
+    <button id="pause" οnclick="pause()">pause</button>
+</div>
+
+
+<script>
+    /**
+     * 为Marker类添加方法
+     */
+    (function() {
+        // save these original methods before they are overwritten
+        var proto_initIcon = L.Marker.prototype._initIcon;
+        var proto_setPos = L.Marker.prototype._setPos;
+
+        var oldIE = (L.DomUtil.TRANSFORM === 'msTransform');
+
+        L.Marker.addInitHook(function () {
+            var iconOptions = this.options.icon && this.options.icon.options;
+            var iconAnchor = iconOptions && this.options.icon.options.iconAnchor;
+            if (iconAnchor) {
+                iconAnchor = (iconAnchor[0] + 'px ' + iconAnchor[1] + 'px');
+            }
+            this.options.rotationOrigin = this.options.rotationOrigin || iconAnchor || 'center center' ;
+            this.options.rotationAngle = this.options.rotationAngle || 0;
+
+            // Ensure marker keeps rotated during dragging
+            this.on('drag', function(e) { e.target._applyRotation(); });
+        });
+
+        L.Marker.include({
+            _initIcon: function() {
+                proto_initIcon.call(this);
+            },
+
+            _setPos: function (pos) {
+                proto_setPos.call(this, pos);
+                this._applyRotation();
+            },
+
+            _applyRotation: function () {
+                if(this.options.rotationAngle) {
+                    this._icon.style[L.DomUtil.TRANSFORM+'Origin'] = this.options.rotationOrigin;
+
+                    if(oldIE) {
+                        // for IE 9, use the 2D rotation
+                        this._icon.style[L.DomUtil.TRANSFORM] = 'rotate(' + this.options.rotationAngle + 'deg)';
+                    } else {
+                        // for modern browsers, prefer the 3D accelerated version
+                        this._icon.style[L.DomUtil.TRANSFORM] += ' rotateZ(' + this.options.rotationAngle + 'deg)';
+                    }
+                }
+            },
+
+            setRotationAngle: function(angle) {
+                this.options.rotationAngle = angle;
+                this.update();
+                return this;
+            },
+
+            setRotationOrigin: function(origin) {
+                this.options.rotationOrigin = origin;
+                this.update();
+                return this;
+            }
+        });
+    })();
+
+
+    var map = L.map('mapid', {
+        center: [38.8631169, 2.3708919],
+        zoom: 5,
+        crs: L.CRS.EPSG3857,
+        layers: [
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            })
+        ]
+    });
+    var _opts = {
+        icon: null,
+        enableRotation:true //允许小车旋转
+    };
+    //移动到当前点的索引
+    this.i = 0;
+
+    var latlngs = [
+        [45.51, 2.3708919],
+        [37.77, 8.54235],
+        [34.04, 9.52532],
+        [36.04, 10.52532],
+        [40.04, 14.52532],
+        [47.04, 15.52532]
+    ];
+    var _path = latlngs;
+    var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+    var myIcon = L.icon({
+        iconUrl: 'car.png',
+        iconSize: [24, 24]
+    });
+
+
+    function start(){
+        var me = this,
+            len = me._path.length;
+        //不是第一次点击开始,并且小车还没到达终点
+        if (me.i && me.i < len - 1) {
+            //没按pause再按start不做处理
+            if (!me._fromPause) {
+                return;
+            }else if(!me._fromStop){
+                //按了pause按钮,并且再按start，直接移动到下一点
+                //并且此过程中，没有按stop按钮
+                //防止先stop，再pause，然后连续不停的start的异常
+                me._moveNext(++me.i);
+            }
+        }else {
+            //第一次点击开始，或者点了stop之后点开始
+            me._addMarker();
+
+            me._moveNext(me.i);
+        }
+        //重置状态
+        this._fromPause = false;
+        this._fromStop = false;
+    }
+
+
+    function _addMarker(callback) {
+        if (this._marker) {
+            this.stop();
+            this._marker.remove();
+        }
+        var marker =new L.Marker(_path[0],{icon: myIcon }).addTo(map)
+        this._marker = marker;
+    }
+
+    /**
+     * 移动到下一个点
+     */
+    function _moveNext(index) {
+        var me = this;
+        if (index < this._path.length - 1) {
+            this._move(me._path[index], me._path[index + 1], me._tween);
+        }
+    }
+
+    /**
+     * 移动小车
+     * @param {Number} poi 当前的步长.
+     * @param {Point} initPos 经纬度坐标初始点.
+     * @param {Point} targetPos 经纬度坐标目标点.
+     * @param {Function} effect 缓动效果，实现插值
+     * @return 无返回值.
+     */
+    function _move(initPos,targetPos,effect) {
+        var me = this,
+            //当前的帧数
+            currentCount = 0,
+            //步长
+            timer = 10, //10毫秒为一步
+            step = 0.1,
+            //总步数
+            count = Math.round(me._getDistance(initPos[0], initPos[1],targetPos[0],targetPos[1]) / step);
+
+        //如果小于1直接移动到下一点
+        if (count < 1) {
+            this._moveNext(++me.i);
+            return;
+        }
+        //两点之间匀速移动
+        var angle;
+        me._intervalFlag = setInterval(function() {
+            //两点之间当前帧数大于总帧数的时候，则说明已经完成移动
+            if (currentCount >= count) {
+                clearInterval(me._intervalFlag);
+                //移动的点已经超过总的长度
+                if(me.i > me._path.length){
+                    return;
+                }
+                //运行下一个点
+                me._moveNext(++me.i);
+            }else {
+                currentCount++;
+                var x = effect(initPos[0], targetPos[0], currentCount, count),
+                    y = effect(initPos[1], targetPos[1], currentCount, count);
+                var pos =L.latLng(x,y);
+
+                //设置marker
+                if(currentCount == 1){
+                    if(me._opts.enableRotation == true){
+                        //initPos=[lat,lng],leaflet中坐标对的格式为(纬度，经度)，因此要计算角度的话，X对应经度,即initPos[1]
+                        angle = me._getAngle(initPos[1], initPos[0],targetPos[1],targetPos[0]);
+                    }
+                }
+                //正在移动
+                me._marker.remove();//先删除
+                me._marker.setRotationAngle(angle);
+                me._marker._latlng = pos;//设置图标位置
+                me._marker.addTo(map);
+            }
+        },timer);
+    }
+
+    /**
+     * 缓动效果
+     * 初始坐标，目标坐标，当前的步长，总的步长
+     * @private
+     */
+    function _tween(initPos, targetPos, currentCount, count) {
+        var b = initPos, c = targetPos - initPos, t = currentCount,
+            d = count;
+        return c * t / d + b;
+    }
+
+    /**
+     * 计算两点间的距离
+     */
+    function _getDistance(pxA,pyA, pxB,pyB) {
+        return Math.sqrt(Math.pow(pxA - pxB, 2) + Math.pow(pyA - pyB, 2));
+    }
+
+    /**
+     * 计算角度
+     * @param startx
+     * @param starty
+     * @param endx
+     * @param endy
+     * @returns {number}
+     */
+    function _getAngle(startx, starty, endx, endy) {
+        var tan = 0
+        if (endx == startx) {
+            tan = 90;
+        } else {
+            tan = Math.atan(Math.abs((endy - starty) / (endx - startx))) * 180 / Math.PI;
+            console.log(tan);
+        }
+
+        if (endx >= startx && endy >= starty)//第一象限
+        {
+            return -tan;
+        } else if (endx > startx && endy < starty)//第四象限
+        {
+            return tan;
+        } else if (endx < startx && endy > starty)//第二象限
+        {
+            return tan - 180;
+        } else {
+            return 180 - tan;  //第三象限
+        }
+    }
+
+    /**
+     * 停止
+     */
+    function stop() {
+        this.i = 0;
+        this._fromStop = true;
+        clearInterval(this._intervalFlag);
+    }
+
+    /**
+     * 暂停
+     */
+    function pause() {
+        clearInterval(this._intervalFlag);
+        //标识是否是按过pause按钮
+        this._fromPause = true;
+    }
+
+</script>
+</body>
+</html>
